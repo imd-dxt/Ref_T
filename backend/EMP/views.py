@@ -2,6 +2,7 @@ from rest_framework import viewsets
 from .models import employee
 from .serializers import EmployeeSerializer
 
+
 class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = employee.objects.all()
     serializer_class = EmployeeSerializer
