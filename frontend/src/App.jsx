@@ -12,11 +12,20 @@ function App() {
   return (
     <ProtectedRoute>
       <div>
-        <Routes>
-          <Route path="/login" element={<REFT />} />
-          <Route path="/main" element={<EMP />} />
-          <Route path="*" element={<div>Page Not Found</div>} />
-        </Routes>
+      <Routes>
+        {/* Public Route for Login */}
+        <Route path="/" element={<REFT />} />
+
+        {/* Protected Route for User interface */}
+        <Route
+          path="/User"
+          element={
+            <ProtectedRoute>
+              <EMP />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
       </div>
     </ProtectedRoute>
     
