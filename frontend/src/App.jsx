@@ -11,13 +11,6 @@ function App() {
   return (
     <Router>
       <div>
-<<<<<<< HEAD
-        <Routes>
-          <Route path="/login" element={<REFT />} />
-          <Route path="/main" element={<EMP />} />
-          <Route path="*" element={<div>Page Not Found</div>} />
-        </Routes>
-=======
       <Routes>
         {/* Public Route for Login */}
         <Route path="/" element={<REFT />} />
@@ -32,7 +25,6 @@ function App() {
           }
         />
       </Routes>
->>>>>>> 9a59c636fb4563dc6206f022b2eba0d2f9daac04
       </div>
     </Router>
     
