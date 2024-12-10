@@ -4,7 +4,6 @@ import './App.css';
 import EMP from './pages/EMP';
 import ProtectedRoute from './pages/ProtectedRoute';
 import REFT from './pages/REFT';
-import Login from './pages/Login';
 
 function App() {
   
@@ -29,7 +28,7 @@ function App() {
       </div>
     </ProtectedRoute>
     
-  )
+  );
 }
 
-export default App
+export default App;
