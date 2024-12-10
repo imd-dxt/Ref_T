@@ -4,12 +4,13 @@ import './App.css';
 import EMP from './pages/EMP';
 import ProtectedRoute from './pages/ProtectedRoute';
 import REFT from './pages/REFT';
+import Login from './pages/Login';
 
 function App() {
   
 
   return (
-    <Router>
+    <ProtectedRoute>
       <div>
       <Routes>
         {/* Public Route for Login */}
@@ -26,7 +27,7 @@ function App() {
         />
       </Routes>
       </div>
-    </Router>
+    </ProtectedRoute>
     
   )
 }
