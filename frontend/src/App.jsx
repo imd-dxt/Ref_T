@@ -12,7 +12,8 @@ function App() {
       <div>
         <Routes>
           <Route path="/login" element={<REFT />} />
-          <Route path="/EMP" element={<EMP />} />
+          <Route path="/main" element={<EMP />} />
+          <Route path="*" element={<div>Page Not Found</div>} />
         </Routes>
       </div>
     </Router>
