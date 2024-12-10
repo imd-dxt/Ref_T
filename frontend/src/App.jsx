@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import EMP from './pages/EMP';
+import ProtectedRoute from './pages/ProtectedRoute';
 import REFT from './pages/REFT';
 
 function App() {
@@ -10,12 +11,23 @@ function App() {
   return (
     <Router>
       <div>
-        <Routes>
-          <Route path="/login" element={<REFT />} />
-          <Route path="/EMP" element={<EMP />} />
-        </Routes>
+      <Routes>
+        {/* Public Route for Login */}
+        <Route path="/" element={<REFT />} />
+
+        {/* Protected Route for User interface */}
+        <Route
+          path="/User"
+          element={
+            <ProtectedRoute>
+              <EMP />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
       </div>
     </Router>
+    
   )
 }
 
