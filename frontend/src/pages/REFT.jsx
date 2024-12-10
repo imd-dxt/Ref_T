@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios"; 
 import { useNavigate } from "react-router-dom";
 
-const App = () => {
+const REFT = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate(); // For redirection
@@ -63,4 +63,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default REFT;
