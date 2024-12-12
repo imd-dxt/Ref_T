@@ -1,13 +1,12 @@
 from rest_framework import viewsets
 from .models import employee, BankAccount, Client
 from .serializers import EmployeeSerializer, BankAccountSerializer, ClientSerializer
-from authentication.permissions import HasRolePermission
 
 class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = employee.objects.all()
     serializer_class = EmployeeSerializer
-    permission_classes = [HasRolePermission]
-    permission_required = 'staff'
+
+
     def get_queryset(self):
         queryset = employee.objects.all()
         name = self.request.query_params.get('name')
@@ -26,9 +25,9 @@ class EmployeeViewSet(viewsets.ModelViewSet):
 
 class BankAccountViewSet(viewsets.ModelViewSet):
     queryset = BankAccount.objects.all()
+
     serializer_class = BankAccountSerializer
-    permission_classes = [HasRolePermission]
-    permission_required = 'sys_admin'
+
     def get_queryset(self):
         queryset = BankAccount.objects.all()
         account_number = self.request.query_params.get('account_number')
@@ -48,8 +47,6 @@ class BankAccountViewSet(viewsets.ModelViewSet):
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
-    permission_classes = [HasRolePermission]
-    permisiiion_required = 'engineer'
     def get_queryset(self):
         queryset = Client.objects.all()
         name = self.request.query_params.get('name')

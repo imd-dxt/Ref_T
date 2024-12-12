@@ -13,7 +13,7 @@ const EMP = ({ token }) => {
     e.preventDefault();
 
     const apiUrl = `http://localhost:8000/api/${resourceType}/?${queryParams}`;
-
+    //name=oussama+fannouch&userID=C101&organizationID=O88&role=SOC example of correct query to type
     try {
       let res;
       const config = {
