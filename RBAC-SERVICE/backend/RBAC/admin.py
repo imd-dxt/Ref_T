@@ -4,4 +4,4 @@ admin.site.register(Client)
 admin.site.register(Bankaccount)
 admin.site.register(Transaction)
 admin .site.register(Employee)
-# Register your models here.
+#Register your models here.
