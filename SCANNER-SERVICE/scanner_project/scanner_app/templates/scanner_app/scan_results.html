@@ -1,0 +1,40 @@
+<!-- filepath: /d:/GRPC-PROJECT/Ref_T/SCANNER-SERVICE/scanner_project/scanner_app/templates/scanner_app/scan_results.html -->
+{% extends 'scanner_app/base.html' %}
+
+{% block title %}Scan Results{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">Scan Results for {{ result.url }}</h1>
+<p class="mb-2"><strong>Scan Date:</strong> {{ result.scan_date }}</p>
+<p class="mb-4"><strong>Total Alerts:</strong> {{ result.total_alerts }}</p>
+<h2 class="text-xl font-bold mb-2">Risk Breakdown</h2>
+<ul class="mb-4">
+    <li><strong>High:</strong> {{ result.high_risk_count }}</li>
+    <li><strong>Medium:</strong> {{ result.medium_risk_count }}</li>
+    <li><strong>Low:</strong> {{ result.low_risk_count }}</li>
+    <li><strong>Informational:</strong> {{ result.informational_risk_count }}</li>
+</ul>
+<h2 class="text-xl font-bold mb-2">Full Report</h2>
+<div class="overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-200">
+        <thead>
+            <tr class="bg-gray-100">
+                <th class="px-4 py-2 border">Risk</th>
+                <th class="px-4 py-2 border">Name</th>
+                <th class="px-4 py-2 border">URL</th>
+                <th class="px-4 py-2 border">Evidence</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for alert in result.report.alerts %}
+            <tr>
+                <td class="px-4 py-2 border">{{ alert.risk }}</td>
+                <td class="px-4 py-2 border">{{ alert.name }}</td>
+                <td class="px-4 py-2 border">{{ alert.url }}</td>
+                <td class="px-4 py-2 border">{{ alert.evidence }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

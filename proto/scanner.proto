@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package scanner;
+
+service ScannerService {
+  rpc ScanUrl (ScanRequest) returns (ScanResponse);
+}
+
+message ScanRequest {
+  string url = 1;
+}
+
+message ScanResponse {
+  string result = 1;
+}
