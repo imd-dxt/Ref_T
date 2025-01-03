@@ -54,6 +54,33 @@ class VirusTotalScanner:
             logger.error(f"Error retrieving VirusTotal scan results: {e}")
             return None
 
+    @staticmethod
+    def scan_domain(domain):
+        headers = {
+            "x-apikey": VIRUSTOTAL_API_KEY
+        }
+        try:
+            url = f"https://www.virustotal.com/api/v3/domains/{domain}"
+            response = requests.get(url, headers=headers)
+            if response.status_code == 200:
+                data = response.json()
+                return {
+                    "detected_urls": len(data.get("data", {}).get("attributes", {}).get("last_analysis_results", {})),
+                    "detected_communicating_samples": len(data.get("data", {}).get("attributes", {}).get("communicating_files", [])),
+                    "categories": data.get("data", {}).get("attributes", {}).get("categories", {}),
+                    "whois": data.get("data", {}).get("attributes", {}).get("whois", "Not available"),
+                    "reputation": data.get("data", {}).get("attributes", {}).get("reputation", "Not available"),
+                    "last_analysis_stats": data.get("data", {}).get("attributes", {}).get("last_analysis_stats", {}),
+                    "subdomains": data.get("data", {}).get("attributes", {}).get("subdomains", []),
+                    "resolutions": data.get("data", {}).get("attributes", {}).get("resolutions", [])
+                }
+            else:
+                logger.error(f"Error retrieving VirusTotal domain report: {response.text}")
+                return {"error": f"VT API error: {response.status_code}"}
+        except Exception as e:
+            logger.error(f"Error during VirusTotal domain scan: {e}")
+            return {"error": f"VT scan failed: {str(e)}"}
+
 class BuiltWithScanner:
     @staticmethod
     def get_technologies(target_url):
@@ -214,11 +241,17 @@ def scan_view(request):
                 vt_scan_results = VirusTotalScanner.get_scan_results(analysis_id)
                 logger.info(f"VirusTotal scan results: {vt_scan_results}")
 
+            # Domain scan
+            domain = target_url.split('//')[-1].split('/')[0]  # Extract domain from URL
+            vt_domain_results = VirusTotalScanner.scan_domain(domain)
+            logger.info(f"VirusTotal domain scan results: {vt_domain_results}")
+
             # ZAP scan
             scanner = ZAPScanner(api_key='n00v2v1bm6u23d7ic1v2armusr')
             if scanner.start_scan(target_url):
                 scanner.wait_for_scan_completion()
                 report = scanner.generate_report(target_url)
+                report['vt_domain_results'] = vt_domain_results
 
                 # Save scan and alerts
                 scan = Scan.objects.create(target_url=target_url, status='Completed', report=report)
@@ -227,7 +260,6 @@ def scan_view(request):
 
                 return redirect('scan_results', scan_id=scan.id)
     return render(request, 'scannerr/scan_form.html')
-
 def scan_results_view(request, scan_id):
     scan = Scan.objects.get(id=scan_id)
     
@@ -243,5 +275,26 @@ def scan_results_view(request, scan_id):
     
     # Sort alerts by risk level
     alerts = scan.alerts.annotate(risk_order=risk_order).order_by('risk_order')
+     # Process WHOIS data to remove duplicates
+    if 'vt_domain_results' in scan.report and 'whois' in scan.report['vt_domain_results']:
+        whois_data = scan.report['vt_domain_results']['whois']
+        # Split WHOIS data into lines and filter duplicates
+        whois_lines = whois_data.split('\n')
+        unique_whois = {}
+        for line in whois_lines:
+            if ':' in line:
+                key, value = line.split(':', 1)
+                key = key.strip()
+                value = value.strip()
+                if key not in unique_whois:
+                    unique_whois[key] = value
+        scan.report['vt_domain_results']['whois'] = unique_whois
+    else:
+        scan.report['vt_domain_results']['whois'] = {}
+    context = {
+        'scan': scan,
+        'alerts': alerts,
+        'vt_domain_results': scan.report.get('vt_domain_results', {})  # Ensure this key exists in the report
+    }
     
-    return render(request, 'scannerr/scan_results.html', {'scan': scan, 'alerts': alerts})
+    return render(request, 'scannerr/scan_results.html', context)
