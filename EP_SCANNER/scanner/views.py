@@ -1,13 +1,10 @@
 import time
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
 from .models import Scan, Alert
 from zapv2 import ZAPv2
 from datetime import datetime
-import json
 import logging
 import requests
-from bs4 import BeautifulSoup
 from django.db.models import Case, When, Value, IntegerField
 
 # Configure logging
@@ -19,7 +16,7 @@ VIRUSTOTAL_API_KEY = "065820c901093f7d3117fa84549c5225d7e1e5f1739bc5bc19f5175899
 VIRUSTOTAL_URL = "https://www.virustotal.com/api/v3/urls"
 
 # BuiltWith API configuration
-BUILTWITH_API_KEY = "79774999-b28e-437b-8350-43b4697c9aed"  # Replace with your BuiltWith API key
+BUILTWITH_API_KEY = "79774999-b28e-437b-8350-43b4697c9aed"  
 BUILTWITH_API_URL = "https://api.builtwith.com/v20/api.json"
 
 class VirusTotalScanner:
@@ -185,13 +182,12 @@ class ZAPScanner:
             for tech in builtwith_tech:
                 technologies.add((tech["name"], tech["category"]))
 
-        # Add technologies from evidence in alerts
+       
         for alert in alerts:
             evidence = alert.get("evidence", "")
             if evidence:
                 technologies.update(self.extract_technologies_from_evidence(evidence))
 
-        # Convert set to list of dictionaries for JSON serialization
         technologies_list = [{"name": name, "category": category} for name, category in technologies]
 
         report = {
@@ -219,7 +215,7 @@ def scan_view(request):
                 logger.info(f"VirusTotal scan results: {vt_scan_results}")
 
             # ZAP scan
-            scanner = ZAPScanner(api_key='sjr7fi42ofcab237q0h1rj49g2')
+            scanner = ZAPScanner(api_key='n00v2v1bm6u23d7ic1v2armusr')
             if scanner.start_scan(target_url):
                 scanner.wait_for_scan_completion()
                 report = scanner.generate_report(target_url)
