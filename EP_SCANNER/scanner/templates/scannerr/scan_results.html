@@ -1,0 +1,276 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan Results Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .dashboard-header {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .dashboard-header h1 {
+            color: #ff6f00;
+            font-size: 2rem;
+            margin: 0;
+            font-weight: 600;
+        }
+        .dashboard-header p {
+            color: #b0b0b0;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        .logo {
+            width: 50px;
+            height: 50px;
+            margin-right: 15px;
+        }
+        .header-content {
+            display: flex;
+            align-items: center;
+        }
+        .stat-card {
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .stat-card i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #ff6f00;
+        }
+        .stat-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0;
+            color: #ff6f00;
+        }
+        .stat-card p {
+            color: #b0b0b0;
+            margin-bottom: 0;
+        }
+        .table-responsive {
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .table thead {
+            background-color: #333;
+        }
+        .table th, .table td {
+            vertical-align: middle;
+            white-space: nowrap;
+            color: #ffffff;
+        }
+        .table td.name {
+            width: 20%;
+        }
+        .table td.description {
+            width: 50%;
+            max-height: 100px;
+        }
+        .btn-primary {
+            background-color: #ff6f00;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #e65a00;
+        }
+        .chart-container {
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-header">
+        <div class="header-content">
+            <img src="{% static 'scannerr/images/bug.png' %}" alt="Bug Logo" class="logo">
+            <div>
+                <h1>Scan Results Dashboard</h1>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stat-card text-center">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>{{ scan.report.risk_summary.High }}</h3>
+                    <p>High Risk Alerts</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card text-center">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <h3>{{ scan.report.risk_summary.Medium }}</h3>
+                    <p>Medium Risk Alerts</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card text-center">
+                    <i class="fas fa-info-circle"></i>
+                    <h3>{{ scan.report.risk_summary.Low }}</h3>
+                    <p>Low Risk Alerts</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card text-center">
+                    <i class="fas fa-info"></i>
+                    <h3>{{ scan.report.risk_summary.Informational }}</h3>
+                    <p>Informational Alerts</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="chart-container">
+            <canvas id="riskChart"></canvas>
+        </div>
+
+        <!-- Scan Details -->
+        <div class="card mb-4 bg-dark text-white">
+            <div class="card-body">
+                <h5 class="card-title">Scan Details</h5>
+                <p><strong>Scanned URL:</strong>{{ scan.target_url }}</p>
+                <p><strong>Scan Date:</strong> {{ scan.report.scan_date }}</p>
+                <p><strong>Total Alerts:</strong> {{ scan.report.total_alerts }}</p>
+            </div>
+        </div>
+
+        <!-- Alerts Table -->
+        <h2 class="mb-4">Alerts</h2>
+        {% if scan.report.alerts %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Risk Level</th>
+                            <th>Name</th>
+                            <th class="description">Description</th>
+                            <th>URL</th>
+                            <th>Parameter</th>
+                            <th>Evidence</th>
+                            <th>Solution</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for alert in alerts %}
+                        <tr>
+                            <td>
+                                {% if alert.risk_level == 'High' %}
+                                    <span class="badge bg-danger">High</span>
+                                {% elif alert.risk_level == 'Medium' %}
+                                    <span class="badge bg-warning">Medium</span>
+                                {% elif alert.risk_level == 'Low' %}
+                                    <span class="badge bg-info">Low</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Informational</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ alert.name }}</td>
+                            <td class="description">{{ alert.description }}</td>
+                            <td><a href="{{ alert.url }}" target="_blank">{{ alert.url }}</a></td>
+                            <td>{{ alert.param }}</td>
+                            <td>{{ alert.evidence }}</td>
+                            <td>{{ alert.solution }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-muted">No alerts found for this scan.</p>
+        {% endif %}
+
+        <!-- Start New Scan Button -->
+        <div class="text-center mt-4">
+            <a href="/" class="btn btn-primary">Start New Scan</a>
+        </div>
+    </div>
+
+    <script>
+        // Chart.js Configuration
+        const ctx = document.getElementById('riskChart').getContext('2d');
+        const riskChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['High', 'Medium', 'Low', 'Informational'],
+                datasets: [{
+                    label: 'Number of Alerts',
+                    data: [
+                        {{ scan.report.risk_summary.High }},
+                        {{ scan.report.risk_summary.Medium }},
+                        {{ scan.report.risk_summary.Low }},
+                        {{ scan.report.risk_summary.Informational }}
+                    ],
+                    backgroundColor: 'rgba(255, 111, 0, 0.2)',
+                    borderColor: '#ff6f00',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#ff6f00',
+                    pointBorderColor: '#ffffff',
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    fill: true,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#333',
+                        },
+                        ticks: {
+                            color: '#ffffff',
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: '#333',
+                        },
+                        ticks: {
+                            color: '#ffffff',
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#ffffff',
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
