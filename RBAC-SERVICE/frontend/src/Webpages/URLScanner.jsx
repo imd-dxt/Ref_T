@@ -19,23 +19,33 @@ const URLScanner = () => {
     };
 
     return (
-        <div>
-            <h1>URL Scanner</h1>
-            <form onSubmit={handleScan}>
-                <label>
+        <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+            <h1>Endpoint Check</h1>
+            <form onSubmit={handleScan} style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', marginBottom: '10px' }}>
                     URL:
-                    <input type="url" value={url} onChange={(e) => setUrl(e.target.value)} required />
+                    <input
+                        type="url"
+                        value={url}
+                        onChange={(e) => setUrl(e.target.value)}
+                        required
+                        style={{ marginLeft: '10px', padding: '5px', width: '300px' }}
+                    />
                 </label>
-                <button type="submit">Scan URL</button>
+                <button type="submit" style={{ padding: '10px 20px', cursor: 'pointer' }}>Scan</button>
             </form>
             {scanResult && (
-                <div>
+                <div style={{ marginTop: '20px' }}>
                     <h2>Scan Results</h2>
-                    <pre>{JSON.stringify(scanResult, null, 2)}</pre>
+                    <div style={{ backgroundColor: '#f5f5f5', padding: '10px', borderRadius: '5px' }}>
+                        <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
+                            {JSON.stringify(scanResult, null, 2)}
+                        </pre>
+                    </div>
                 </div>
             )}
             {error && (
-                <div>
+                <div style={{ marginTop: '20px', color: 'red' }}>
                     <h2>Error</h2>
                     <pre>{error}</pre>
                 </div>

@@ -15,7 +15,7 @@ from scanner.views import VirusTotalScanner, ZAPScanner
 class ScanService(scan_pb2_grpc.ScanServiceServicer):
     def ScanUrl(self, request, context):
         target_url = request.url
-        # Perform the scan using existing logic
+        
         vt_result = VirusTotalScanner.scan_url(target_url)
         zap_scanner = ZAPScanner(api_key='n00v2v1bm6u23d7ic1v2armusr')
         zap_scanner.start_scan(target_url)

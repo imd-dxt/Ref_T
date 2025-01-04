@@ -5,6 +5,7 @@ import Mainpage from './Webpages/Mainpage';
 import RBAC from './Webpages/RBAC';
 import ProtectedRoute from './Webpages/ProtectedRoute';
 import URLScanner from './Webpages/URLScanner';
+import LogDashboard from './Webpages/LogDashboard';
 function App() {
   
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path= "/" element={<Mainpage />}/> 
           <Route path= "/RBAC"element={<ProtectedRoute><RBAC /></ProtectedRoute>}/>
           <Route path="/scanx" element={<ProtectedRoute><URLScanner /></ProtectedRoute>} />
+          <Route path="/logs" element={<ProtectedRoute><LogDashboard /></ProtectedRoute>} />
         </Routes>
       </Router>
     </>

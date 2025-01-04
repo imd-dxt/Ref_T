@@ -1,6 +1,15 @@
 from django.db import models
 from django.db.models import F
 from django.core.validators import RegexValidator
+from django.contrib.auth.models import User
+
+class RequestLog(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    method = models.CharField(max_length=10)
+    endpoint = models.CharField(max_length=255)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return f"{self.user.username} - {self.method} {self.endpoint} at {self.timestamp}"
 
 class Client(models.Model):
     full_name = models.CharField(max_length=100)

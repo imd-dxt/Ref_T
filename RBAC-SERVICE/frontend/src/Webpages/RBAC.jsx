@@ -90,7 +90,7 @@ const RBAC = () => {
             {error && (
                 <div>
                     <h2>Error</h2>
-                    <pre>{error}</pre>
+                    <pre>{error.includes('403') ? 'Prohibited' : error}</pre>
                 </div>
             )}
         </div>
