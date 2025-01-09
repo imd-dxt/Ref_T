@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import '../styles/base.css';
+import '../styles/RBAC.css';
 const RBAC = () => {
     const [method, setMethod] = useState('GET');
     const [resourceType, setResourceType] = useState('');

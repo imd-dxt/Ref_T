@@ -1,5 +1,6 @@
 import React from 'react';
-
+import '../styles/base.css';
+import '../styles/Mainpage.css';
 const Mainpage = () => {
     return (
         <div style={{ textAlign: 'center', marginTop: '50px' }}>

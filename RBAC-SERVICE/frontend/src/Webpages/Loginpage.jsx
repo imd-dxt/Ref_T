@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import './Loginpage.css';
 
 const Loginpage = () => {
     const [username, setUsername] = useState('');
@@ -15,11 +16,8 @@ const Loginpage = () => {
                 username,
                 password
             });
-            console.log('Token:', response.data.access);
             localStorage.setItem('token', response.data.access);
-            console.log('Token stored in localStorage:', localStorage.getItem('token'));
             navigate('/RBAC');
-            console.log('Navigating to /RBAC');
         } catch (err) {
             console.error('Login error:', err);
             setError('Invalid credentials');
@@ -27,30 +25,44 @@ const Loginpage = () => {
     };
 
     return (
-        <div>
-            <h2>Login</h2>
-            <form onSubmit={handleLogin}>
-                <div>
-                    <label>Username:</label>
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>Password:</label>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-                <button type="submit">Login</button>
-                {error && <p>{error}</p>}
-            </form>
+        <div className="login-container">
+            <div className="login-box">
+                <h1 className="login-title">Welcome Back</h1>
+                <form onSubmit={handleLogin} className="login-form">
+                    <div className="form-group">
+                        <input
+                            type="text"
+                            id="username"
+                            className="login-input"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder=" "
+                            required
+                        />
+                        <label htmlFor="username" className="login-label">Username</label>
+                    </div>
+                    <div className="form-group">
+                        <input
+                            type="password"
+                            id="password"
+                            className="login-input"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder=" "
+                            required
+                        />
+                        <label htmlFor="password" className="login-label">Password</label>
+                    </div>
+                    <button type="submit" className="login-button">
+                        Log In
+                    </button>
+                </form>
+                {error && <div className="login-error">{error}</div>}
+            </div>
         </div>
     );
 };
 
 export default Loginpage;
+
+

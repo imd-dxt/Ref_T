@@ -1,0 +1,38 @@
+.url-scanner-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .url-scanner-title {
+    color: var(--primary-color);
+  }
+  
+  .url-scanner-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .url-scanner-input {
+    flex-grow: 1;
+  }
+  
+  .url-scanner-button {
+    background-color: var(--secondary-color);
+  }
+  
+  .url-scanner-results {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+    margin-top: 20px;
+  }
+  
+  .url-scanner-error {
+    color: var(--error-color);
+    margin-top: 20px;
+  }
+  
+  

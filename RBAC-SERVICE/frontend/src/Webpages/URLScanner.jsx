@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-
+import '../styles/base.css';
+import '../styles/URLScanner.css';
 const URLScanner = () => {
     const [url, setUrl] = useState('');
     const [scanResult, setScanResult] = useState(null);
